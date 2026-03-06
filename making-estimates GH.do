@@ -15,6 +15,7 @@ https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_
 https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Life_Table_Complete_Medium_Male_1950-2023.csv.gz
 
 // population by single year age groups
+* NOTE! Consider getting 'Population Exposure' from UN WPP instead of population
 https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Population1JanuaryBySingleAgeSex_Medium_1950-2023.csv.gz
 */
 
@@ -150,6 +151,9 @@ save temp, replace
 * Aggregating for regions
 drop if year<1950
 merge m:1 iso3 using "$data\regions",  keep(match) nogen keepusing(region)
+
+* NOTE! Consider aggregating by weighting mx by 'Population Exposure' and ax by mx*'Population Exposure' and then use that to recalculate qx. The results are however very smilar doing this
+
 collapse (mean) qx  [aweight=p] , by(region sex year x)
 append using temp
 
@@ -334,4 +338,5 @@ use bench , clear
 sort year sex
 order frontier sex year f70 f70hat ocountry of70 a b a2 b2 gmax gmin oa
 br // frontier PPD 
+
 
